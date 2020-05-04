@@ -12,13 +12,8 @@ RUN chmod +x /usr/bin/composer
 COPY . /app
 COPY conf/supervisord-ws-server.conf /etc/supervisor/conf.d/supervisord-ws-server.conf
 RUN /app/conf/setup_dvws.sh \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && sed -i 's!Listen 80!Listen 81!g' /etc/apache2/ports.conf \
-    && echo "export DVWS_DOMAIN=$(echo $DVWS_DOMAIN)" >> /etc/apache2/envvars \
-    && sed -i 's!80!81!g' /etc/apache2/sites-available/000-default.conf \
-    && sed -i 's!80!81!g' /etc/apache2/sites-enabled/000-default.conf \
-    && sed -i "s#SetEnvIf x-forwarded-proto https HTTPS=on#SetEnvIf x-forwarded-proto https HTTPS=on\nSetEnv DVWS_DOMAIN=$(echo $DVWS_DOMAIN)#g" /etc/apache2/sites-available/000-default.conf \
-    && sed -i "s#SetEnvIf x-forwarded-proto https HTTPS=on#SetEnvIf x-forwarded-proto https HTTPS=on\nSetEnv DVWS_DOMAIN=$(echo $DVWS_DOMAIN)#g" /etc/apache2/sites-enabled/000-default.conf
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+COPY conf/run.sh /run.sh
 
 EXPOSE 81 8080
 
